@@ -1,3 +1,17 @@
+**κάνω μια διαδικάσία οπου συνδέω τον φάκελό μου με δύο git repo, το δικό μου και του καθηγητή ωστε να έχω ένα branch στο οποίο θα κάνω pull τον κόδικα του μαθήματος αλλα θα προσθέτω και δικά μου σχόλια**
+```bash
+git remote add origin git@github.com:alkisax/cf7-react-lessons.git   # Your personal repo
+git remote add teacher https://github.com/DamMarin/cf7-react-intro.git  # Teacher's repo
+git checkout -b notes
+git fetch teacher
+git merge teacher/main
+git merge teacher/main --allow-unrelated-histories
+# εδω μπήκα σε κατάσταση merge conflict και αφού τα έλυσα προσθεσα το συγκεκριμένο αρχείο (εδώ .gitignore)
+git add .gitignore
+git commit -m "Merge teacher/main into notes with resolved conflict"
+
+```
+
 npm create vite@latest my-name -- --template react-ts 
 npm install
 
