@@ -2,7 +2,8 @@
 // import FunctionalComponent from "./components/FunctionalComponent.tsx";
 // import ArrowFunctionalComponent from "./components/ArrowFunctionalComponent.tsx";
 // import ArrowFunctionalComponentWithProps from "./components/ArrowFunctionalComponentWithProps.tsx";
-import ArrowFunctionalComponentWithPropsType from "./components/ArrowFunctionalComponentWithPropsType.tsx";
+// import ArrowFunctionalComponentWithPropsType from "./components/ArrowFunctionalComponentWithPropsType.tsx";
+import CodingFactoryLogo from "./components/CodingFactoryLogo.tsx";
 import Layout from "./components/Layout.tsx";
 // import ClassComponentWithState from "./components/ClassComponentWithState.tsx";
 // import FunctionalComponentWithState from "./components/FunctionalComponentWithState.tsx";
@@ -18,15 +19,15 @@ function App() {
       {/* <FunctionalComponent/> */}
       {/* <ArrowFunctionalComponent/> */}
       {/* <ArrowFunctionalComponentWithProps title="Is a Arrow Functional Component with Props!"/> */}
-      <ArrowFunctionalComponentWithPropsType
+      {/* <ArrowFunctionalComponentWithPropsType
         title="Is a Arrow Functional Component with Props!"
         description="this is a description"
-      />
-
-        {/*<ClassComponentWithState/>*/}
-        {/*<FunctionalComponentWithState/>*/}
+      /> */}
+      {/*<ClassComponentWithState/>*/}
+      {/*<FunctionalComponentWithState/>*/}
       {/* <Counter/> */}
       {/* <ViteIntro /> */}
+      <CodingFactoryLogo />
 
 
       </Layout>

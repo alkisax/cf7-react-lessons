@@ -13,6 +13,13 @@ git commit -m "Merge teacher/main into notes with resolved conflict"
 git checkout main
 git merge notes
 ```
+αυτο έκανα για να πάρω το version
+```bash
+git checkout main
+git checkout tags/2025.05.26 -- .
+git add .
+git commit -m "Update project to lesson 2025.05.26 from teacher repo"
+```
 
 npm create vite@latest my-name -- --template react-ts 
 npm install
@@ -243,4 +250,68 @@ import ArrowFunctionalComponentWithPropsType from "./components/ArrowFunctionalC
     description="this is a description"
   />
 </>
+```
+
+21/5/2025
+# component composition
+#### CodingFactoryLogo.tsx
+- δεν έχει τίποτα εκτώς απο την μορφοποίηση της εικόνας 
+- νομιζα την εικόνα πρέπει να την κάνεις Import...
+- ύψος rem 16, margin y 4
+- το πέρασα ως `/logo.png` και οχι με ./ γιατί είναι στο Public
+```tsx
+const CodingFactoryLogo = () => {
+  return (
+    <>
+      <img
+        className="my-4 h-16"
+        src="/logo.png"
+        alt="CF7"
+      />
+    </>
+  )
+}
+
+export default CodingFactoryLogo;
+```
+- App.tsx
+```tsx
+import CodingFactoryLogo from "./components/CodingFactoryLogo.tsx";
+
+<>
+  <CodingFactoryLogo />
+</>
+```
+
+#### Layout.tsx
+- τα header και footer δεν υπάρχουν ακόμα
+- προσοχή εδώ είναι tsx όποτε χριάζετε να δηλώνω τύπο και interface η type
+```tsx
+interface LayoutProps{
+  children: React.ReactNode;
+}
+const Layout = ({children}:LayoutProps) => {}
+```
+```tsx
+import React from "react";
+import Header from "./Header.tsx";
+import Footer from "./Footer.tsx";
+
+interface LayoutProps{
+  children: React.ReactNode;
+}
+
+const Layout = ({children}:LayoutProps) => {
+  return (
+    <>
+      <Header/>
+        <div className="container mx-auto min-h-[95vh] pt-24">
+          {children}
+        </div>
+      <Footer/>
+    </>
+  )
+}
+
+export default Layout;
 ```
