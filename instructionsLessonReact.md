@@ -9,7 +9,9 @@ git merge teacher/main --allow-unrelated-histories
 # εδω μπήκα σε κατάσταση merge conflict και αφού τα έλυσα προσθεσα το συγκεκριμένο αρχείο (εδώ .gitignore)
 git add .gitignore
 git commit -m "Merge teacher/main into notes with resolved conflict"
-
+# επιστρέφω στο Main
+git checkout main
+git merge notes
 ```
 
 npm create vite@latest my-name -- --template react-ts 
