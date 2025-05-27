@@ -252,7 +252,7 @@ import ArrowFunctionalComponentWithPropsType from "./components/ArrowFunctionalC
 </>
 ```
 
-21/5/2025
+**21/5/2025**
 # component composition
 #### CodingFactoryLogo.tsx
 - δεν έχει τίποτα εκτώς απο την μορφοποίηση της εικόνας 
@@ -284,8 +284,11 @@ import CodingFactoryLogo from "./components/CodingFactoryLogo.tsx";
 ```
 
 #### Layout.tsx
+- εδώ έχω βάλει ένα `{childrean}` Που ως props θα περνάει τα διάφορα υπο components μου. **Στο App.tsx θα είναι μέσα σε `<Layout></Layout>`**
 - τα header και footer δεν υπάρχουν ακόμα
 - προσοχή εδώ είναι tsx όποτε χριάζετε να δηλώνω τύπο και interface η type
+- `children: React.ReactNode` δεν είναι string boolean κλπ είναι ReactNode δηλ ένα εγγυρο αντικείμενο της react. θα μπορούσε να είναι και component
+- απο το viewport θα πάρεις το 95% `min-h-[95vh]` πάμε το περιεχόμενο λίγο πιο κάτω `min-h-[95vh] pt-24`
 ```tsx
 interface LayoutProps{
   children: React.ReactNode;
@@ -315,3 +318,306 @@ const Layout = ({children}:LayoutProps) => {
 
 export default Layout;
 ```
+- App.tsx
+```tsx
+import Layout from "./components/Layout.tsx";
+
+<>
+  <Layout></Layout>
+</>
+```
+
+#### Header.tsx
+- Πάει την γραμμη του λινκ πιο κατω `hover:underline hover:underline-offset-4`
+- `px-4` και δεξια και αριστερά
+- αργότερα θα αλλάξουμε το `<a>` με router
+```tsx
+import CodingFactoryLogo from "./CodingFactoryLogo.tsx";
+
+const Header = () => {
+  return (
+    <>
+      <header className="bg-[#782024] fixed w-full">
+        <div className="container mx-auto px-4 flex items-center justify-between">
+          <CodingFactoryLogo />
+          <a className="text-white hover:underline hover:underline-offset-4" href="/">Home</a>
+        </div>
+      </header>
+    </>
+  )
+}
+export default Header;
+```
+
+#### Footer.tsx
+```tsx
+const Footer = () => {
+  const currentYear: number = new Date().getFullYear();
+
+  return (
+  <>
+    <footer className="bg-gray-700">
+      <div className="text-white text-center py-4">
+        Copyright © {currentYear}, Coding Factory 7. All rights reserved.
+      </div>
+    </footer>
+  </>
+  )
+}
+
+export default Footer;
+```
+
+- App.tsx
+```tsx
+import CodingFactoryLogo from "./components/CodingFactoryLogo.tsx";
+import Layout from "./components/Layout.tsx";
+
+function App() {
+
+  return (
+    <>
+      <Layout>
+        <CodingFactoryLogo />
+      </Layout>
+    </>
+  )
+}
+
+export default App
+```
+
+# State
+#### ClassComponentWithState.tsx
+- θα φτιαξουμε έναν counter
+- χρειαζομαι τον τυπο της ts
+```tsx
+type State = {
+  count: number;
+}
+```
+- `<object, State>` το object είναι το Props μου και state o τύπος μου
+- `onClick={this.increase}`
+- πως θα ήταν αν ήθελα state σε δύο μεταβλητές;
+```tsx
+  constructor(props: object) {
+    super(props);
+    this.state = { count: 0 };
+  }
+```
+ 
+
+```tsx
+import { Component } from "react";
+
+type State = {
+  count: number;
+}
+
+class ClassComponentWithState extends Component<object, State> {
+  // εδώ φτιαχνω το αρχικό μου state
+  constructor(props: object) {
+    super(props);
+    this.state = { count: 0 };
+  }
+
+  increase = () => {
+    this.setState({count: this.state.count + 1})
+  }
+
+  reset = () => {
+    this.setState({count: 0})
+  }
+
+  render() {
+    return(
+    <>
+      <div className="space-y-4 pt-12">
+        <h1 className="text-center">Count is {this.state.count}</h1>
+        <div className="text-center space-x-4">
+        <button
+          className="bg-black text-white py-2 px-4"
+          onClick={this.increase}
+        >
+          Increase
+        </button>
+        <button
+          className="bg-red-400 text-white py-2 px-4"
+          onClick={this.reset}
+        >
+          Reset
+        </button>
+        </div>
+      </div>
+    </>
+    )
+  }
+}
+
+export default ClassComponentWithState;
+```
+
+- App.tsx
+```tsx
+import ClassComponentWithState from "./components/ClassComponentWithState.tsx";
+
+    <>
+      <Layout>
+        <ClassComponentWithState/>
+      </Layout>
+    </>
+```
+
+#### FunctionalComponentWithState.tsx
+- εδω η συνταξη του useState
+```tsx
+import { useState } from "react";
+const [count,setCount] = useState(0);
+```
+- καλώ τις function χωρις (): `onClick={resetCount}`
+```tsx
+import { useState } from "react";
+
+const FunctionalComponentWithState = ( ) => {
+  const [count,setCount] = useState(0);
+
+  const increaseCount = () => {
+    setCount(count + 1)
+  }
+
+  const resetCount = () => {
+    setCount(0)
+  }
+
+  return (
+    <>
+      <div className="space-y-4 pt-12">
+        <h1 className="text-center">Count is {count}</h1>
+        <div className="text-center space-x-4">
+          <button
+            className="bg-black text-white py-2 px-4"
+            onClick={increaseCount}
+          >
+            Increase
+          </button>
+          <button
+            className="bg-red-400 text-white py-2 px-4"
+            onClick={resetCount}
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default FunctionalComponentWithState;
+```
+
+- App.tsx
+```tsx
+import FunctionalComponentWithState from "./components/FunctionalComponentWithState.tsx";
+
+    <>
+      <Layout>
+        <FunctionalComponentWithState/>
+      </Layout>
+    </>
+```
+## μεταφορα state στα child components
+- φτιαχνω λίγο καλήτερα τον μετρητή
+#### Counter.tsx
+- θα πρέπει να φτιαχτεί το CounterButton
+- η σύνταξη για να περάσω Props στα child component `<CounterButton onClick={resetCount} disabled={count === 0} label="Reset" addClass="bg-cf-dark-red"/>`, αλλου ={}, αλλού ={x>==y}, αλλου =""
+```tsx
+import { useState } from "react";
+import CounterButton from "./CounterButton.tsx";
+
+const Counter = ( ) => {
+  const [count,setCount] = useState(0);
+
+  const increaseCount = () => {
+    setCount(count + 1)
+  }
+
+  const decreaseCount = () => {
+    if (count > 0) {
+      setCount(count - 1)
+    }
+  }
+
+  const resetCount = () => {
+    setCount(0)
+  }
+
+  return (
+    <>
+      <div className="space-y-4 text-2xl pt-12">
+        <h1 className="text-center">Count is {count}</h1>
+        <div className="text-center space-x-4">
+          <CounterButton onClick={increaseCount} label="Increase" />
+          <CounterButton onClick={decreaseCount} disabled={count === 0} label="Decrease" />
+          <CounterButton onClick={resetCount} disabled={count === 0} label="Reset" addClass="bg-cf-dark-red"/>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default Counter;
+```
+
+#### CounterButton.tsx
+- ως props έρχονται onClick, disabled = false, label, addClass. Μετά λογο ts πρέπει να βάλω `({ ... }: ButtonProps)`
+- το addClass το ορίζω επιτόπου και δεν το φέρνω απο τον πατέρα. 
+- το disabled στον πατέρα δεν είναι state αλλα μια boolean συνάρτηση `disabled={count === 0}`
+- το OnClick είναι μια συνάρτηση. ορίζετε κάπως περίοεγα στο ts type `onClick: () => void;`
+- επειδή στο type το disabled είναι optional ('disabled?: boolean;'), στην εισαγώγή των Props στην συναρτηση δίνω και την default τιμή που θα έχει άν δεν δώσει ο πατέρας 'disabled = false'
+- ιδιο και με `addClass?: string;`, `addClass = "bg-cf-dark-gray"`
+- προσοχή πως περνάω κλάσεις και αλλαγή τους απο τον πατέρα. πχ `className={"disabled:bg-gray-600 text-white py-2 px-4 " + addClass}` (προσοχή θέλει ένα ' ')
+
+```tsx
+type ButtonProps = {
+  onClick: () => void;
+  disabled?: boolean;
+  label: string;
+  addClass?: string;
+}
+
+const CounterButton = ({onClick, disabled = false, label, addClass = "bg-cf-dark-gray"}: ButtonProps) => {
+  return (
+    <>
+      <button
+        className={"disabled:bg-gray-600 text-white py-2 px-4 " + addClass}
+        onClick={onClick}
+        disabled={disabled}
+      >
+        {label}
+      </button>
+    </>
+  )
+}
+export default CounterButton;
+```
+
+- App.tsx
+```tsx
+import Layout from "./components/Layout.tsx";
+import Counter from "./components/Counter.tsx";
+
+function App() {
+
+  return (
+    <>
+      <Layout>
+        <Counter/>
+      </Layout>
+    </>
+  )
+}
+
+export default App
+```
+
+**εικονήδια lucid react**
