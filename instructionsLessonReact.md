@@ -460,7 +460,6 @@ export default ClassComponentWithState;
 - App.tsx
 ```tsx
 import ClassComponentWithState from "./components/ClassComponentWithState.tsx";
-
     <>
       <Layout>
         <ClassComponentWithState/>
@@ -518,7 +517,6 @@ export default FunctionalComponentWithState;
 - App.tsx
 ```tsx
 import FunctionalComponentWithState from "./components/FunctionalComponentWithState.tsx";
-
     <>
       <Layout>
         <FunctionalComponentWithState/>
@@ -568,6 +566,7 @@ const Counter = ( ) => {
 export default Counter;
 ```
 
+### διαφορα για μεταφορά σε child style/default if not etxc
 #### CounterButton.tsx
 - ως props έρχονται onClick, disabled = false, label, addClass. Μετά λογο ts πρέπει να βάλω `({ ... }: ButtonProps)`
 - το addClass το ορίζω επιτόπου και δεν το φέρνω απο τον πατέρα. 
@@ -600,14 +599,11 @@ const CounterButton = ({onClick, disabled = false, label, addClass = "bg-cf-dark
 }
 export default CounterButton;
 ```
-
 - App.tsx
 ```tsx
 import Layout from "./components/Layout.tsx";
 import Counter from "./components/Counter.tsx";
-
 function App() {
-
   return (
     <>
       <Layout>
@@ -616,14 +612,13 @@ function App() {
     </>
   )
 }
-
 export default App
 ```
 
 **εικονήδια lucid react**
 -26/5/2025
 
-- from gpt:
+- from gpt για update των λόκαλ αρχείων απο το τελικό version του μαθήματος:
 git remote -v
 
 git fetch teacher --tags
@@ -685,9 +680,7 @@ export default NameChanger;
 ```tsx
 import Layout from "./components/Layout.tsx";
 import NameChanger from "./components/NameChanger.tsx";
-
 function App() {
-
   return (
     <>
       <Layout>
@@ -696,7 +689,375 @@ function App() {
     </>
   )
 }
-
 export default App
+```
 
+#### CounterWithMoreStates.tsx
+
+```tsx
+import {useState} from "react";
+import CounterButton from "./CounterButton.tsx";
+
+const CounterWithMoreStates = () =>{
+  const [count,setCount] = useState(0);
+  const [lastAction, setLastAction] = useState("");
+  const [time, setTime] = useState("");
+
+  const getCurrentTime = () => new Date().toLocaleTimeString();
+
+  const increaseCount = () => {
+    setCount(count + 1);
+    setLastAction("Increase");
+    setTime(getCurrentTime());
+  }
+
+  const decreaseCount = () => {
+    if (count > 0) {
+      setCount(count - 1);
+      setLastAction("Decrease");
+      setTime(getCurrentTime());
+    }
+  }
+
+  const resetCount = () => {
+    setCount(0);
+    setLastAction("Reset");
+    setTime(getCurrentTime());
+  }
+
+  return (
+    <>
+      <div className="space-y-4 text-2xl pt-12">
+        <h1 className="text-center">Count is {count}</h1>
+        <div className="text-center space-x-4">
+          <CounterButton onClick={increaseCount} label="Increase" />
+          <CounterButton onClick={decreaseCount} disabled={count === 0} label="Decrease" />
+          <CounterButton onClick={resetCount} disabled={count === 0} label="Reset" addClass="bg-cf-dark-red"/>
+        </div>
+      </div>
+      <p className="text-center pt-8">Last change: <strong>{lastAction || "-"}</strong> at <strong>{time || "-"}</strong></p>
+    </>
+  )
+}
+export default CounterWithMoreStates;
+```
+
+- App.tsx
+```tsx
+import Layout from "./components/Layout.tsx";
+import CounterWithMoreStates from "./components/CounterWithMoreStates.tsx";
+function App() {
+  return (
+    <>
+      <Layout>
+        <CounterWithMoreStates/>
+      </Layout>
+    </>
+  )
+}
+export default App
+```
+
+- δεν είναι καλή πρακτική να έχουμε state χωριστά που να ενημερώνονται πάντα ταυτόχρονα και θα πρέπει να τα ομαδοποιήσουμε κάπως.
+### χρήση ομαδοποιημένου state
+#### CounterAdvanced.tsx
+- ομαδοποίηση:
+```tsx
+  const [state, setState] = useState<CounterState>({
+    count:0,
+    lastAction: "",
+    time: "",
+  });
+  //...
+  setState({
+    count: state.count + 1,
+    lastAction: "Increase",
+    time: getCurrentTime(),
+  });
+```
+- στην Html καλούνται ως `{state.lastAction || "-"}` κλπ
+- χρειάζομαι ts types για αυτό `useState<CounterState>`:
+- < > → Για generics (συναρτήσεις/components που δουλεύουν με πολλούς τύπους).useState<number>, Array<string>, Promise<boolean>.  
+: → Για αναφορά τύπων σε μεταβλητές, κλάσεις, functions.
+const name: string, function greet(): void.
+
+```tsx
+type CounterState ={
+  count: number;
+  lastAction: string;
+  time: string;
+}
+```
+
+```tsx
+import {useState} from 'react';
+import CounterButton from "./CounterButton.tsx";
+
+type CounterState ={
+  count: number;
+  lastAction: string;
+  time: string;
+}
+
+const CounterAdvanced = () => {
+
+  const [state, setState] = useState<CounterState>({
+    count:0,
+    lastAction: "",
+    time: "",
+  });
+
+  const getCurrentTime = () => new Date().toLocaleTimeString();
+
+  const increaseCount = () =>{
+    setState({
+      count: state.count + 1,
+      lastAction: "Increase",
+      time: getCurrentTime(),
+    });
+  }
+
+  const decreaseCount = () =>{
+    if (state.count > 0){
+      setState({
+        count: state.count -1,
+        lastAction: "Decrease",
+        time: getCurrentTime(),
+      });
+    }
+  }
+
+  const resetCount = () =>{
+    setState({
+      count: 0,
+      lastAction: "Reset",
+      time: getCurrentTime(),
+    });
+  }
+
+  return (
+    <>
+      <div className="space-y-4 text-2xl pt-12">
+        <h1 className="text-center">Count is {state.count}</h1>
+        <div className="text-center space-x-4">
+          <CounterButton onClick={increaseCount} label="Increase" />
+          <CounterButton onClick={decreaseCount} disabled={state.count === 0} label="Decrease" />
+          <CounterButton onClick={resetCount} disabled={state.count === 0} label="Reset" addClass="bg-cf-dark-red"/>
+        </div>
+      </div>
+      <p className="text-center pt-8">Last change: <strong>{state.lastAction || "-"}</strong> at <strong>{state.time || "-"}</strong></p>
+    </>
+  )
+}
+export default CounterAdvanced;
+```
+
+- App.tsx
+```tsx
+import Layout from "./components/Layout.tsx";
+import CounterAdvanced from "./components/CounterAdvanced.tsx";
+function App() {
+  return (
+    <>
+      <Layout>
+        <CounterAdvanced/>
+      </Layout>
+    </>
+  )
+}
+export default App
+```
+
+# Custom hook
+- αλλα Hooks useEffect, userRef, useReduce, useStateSction
+- αλλα μπορώ να φτιάξω και custom για επαναχρησιμοποίση κωδικα
+
+#### useCounter.ts
+- εδώ θα βγάλω όλη την λειτορυγία σε ένα custom hook και θα κρατήσω στο αρχείο μου μόνο το rendering
+- τα βάζω στον φάκελο hooks. Συνηθίζετε να τα ονομαζω με το προθεμα use. Και είναι αρχείο ts (οχι tsx). και δεν εχουμε επιστροφή jsx/tsx
+- `export const` και `return {count, increase, decrease, reset};`
+
+```ts
+import { useState } from "react";
+
+export const useCounter = () => {
+  const [count, setCount] = useState(0);
+
+  const increase = () => {
+    setCount(count + 1);
+  }
+  const decrease = () => {
+    if (count > 0){
+      setCount(count - 1);
+    }
+  }
+  const reset = () => {
+    setCount(0);
+  }
+  return {
+    count,
+    increase,
+    decrease,
+    reset
+  };
+}
+```
+#### CounterWithCustomHook.tsx
+- παίρνω την λογική απο το custom hook `const { count, increase, decrease, reset } = useCounter();`
+- state.count -> count etc.
+```tsx
+import CounterButton from "./CounterButton.tsx";
+import { useCounter } from "../hooks/useCounter.ts"
+
+const CounterWithCustomHook = () => {
+
+  // custom hook function
+  const { count, increase, decrease, reset } = useCounter();
+
+  return (
+    <>
+      <div className="space-y-4 text-2xl pt-12">
+        <h1 className="text-center">Count is {count}</h1>
+        <div className="text-center space-x-4">
+          <CounterButton onClick={increase} label="Increase" />
+          <CounterButton onClick={decrease} disabled={count === 0} label="Decrease" />
+          <CounterButton onClick={reset} disabled={count === 0} label="Reset" addClass="bg-cf-dark-red"/>
+        </div>
+      </div>
+      {/*<p className="text-center pt-8">Last change: <strong>{state.lastAction || "-"}</strong> at <strong>{state.time || "-"}</strong></p>*/}
+    </>
+  )
+}
+
+export default CounterWithCustomHook;
+```
+
+- App.tsx
+```tsx
+import Layout from "./components/Layout.tsx";
+import CounterWithCustomHook from "./components/CounterWithCustomHook.tsx";
+function App() {
+
+  return (
+    <>
+      <Layout>
+        <CounterWithCustomHook/>
+      </Layout>
+    </>
+  )
+}
+export default App
+```
+
+#### useAdvancedCounter.ts
+- περνάω εξω και το state. γιατί πιά είναι έδώ
+```ts
+  return {
+    count: state.count,
+    lastAction: state.lastAction,
+    time: state.time,
+    increase,
+    decrease,
+    reset
+  };
+```
+```ts
+import {useState} from 'react';
+
+type CounterState ={
+  count: number;
+  lastAction: string;
+  time: string;
+}
+
+export const useAdvancedCounter = () => {
+
+  const [state, setState] = useState<CounterState>({
+    count:0,
+    lastAction: "",
+    time: "",
+  });
+
+  const getCurrentTime = () => new Date().toLocaleTimeString();
+
+  const increase =() => {
+    setState({
+      count: state.count + 1,
+      lastAction: "Increase",
+      time: getCurrentTime(),
+    });
+  };
+
+  const decrease = () => {
+    if (state.count > 0){
+      setState({
+        count: state.count - 1,
+        lastAction: "Decrease",
+        time: getCurrentTime(),
+      });
+    }
+  };
+
+  const reset = () => {
+    setState({
+      count: 0,
+      lastAction: "Reset",
+      time: getCurrentTime(),
+    })
+  }
+
+  return {
+    count: state.count,
+    lastAction: state.lastAction,
+    time: state.time,
+    increase,
+    decrease,
+    reset
+  };
+}
+```
+
+#### CounterAdvancedWithCustomHook.tsx
+
+```tsx
+import CounterButton from "./CounterButton.tsx";
+import { useAdvancedCounter } from "../hooks/useAdvancedCounter.ts";
+
+const CounterAdvancedWithCustomHook = () => {
+
+  // custom hook function
+  const { count, lastAction, time, increase, decrease, reset } = useAdvancedCounter();
+
+  return (
+    <>
+      <div className="space-y-4 text-2xl pt-12">
+        <h1 className="text-center">Count is {count}</h1>
+        <div className="text-center space-x-4">
+          <CounterButton onClick={increase} label="Increase" />
+          <CounterButton onClick={decrease} disabled={count === 0} label="Decrease" />
+          <CounterButton onClick={reset} disabled={count === 0} label="Reset" addClass="bg-cf-dark-red"/>
+        </div>
+      </div>
+      <p className="text-center pt-8">Last change: <strong>{lastAction || "-"}</strong> at <strong>{time || "-"}</strong></p>
+    </>
+  )
+}
+
+export default CounterAdvancedWithCustomHook;
+```
+
+- App.tsx
+```tsx
+import Layout from "./components/Layout.tsx";
+import CounterAdvancedWithCustomHook from "./components/CounterAdvancedWithCustomHook";
+function App() {
+  return (
+    <>
+      <Layout>
+        <CounterAdvancedWithCustomHook/>
+      </Layout>
+    </>
+  )
+}
+export default App
 ```
