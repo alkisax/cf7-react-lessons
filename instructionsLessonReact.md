@@ -1215,6 +1215,7 @@ export default App
 
 #### Todo.tsx
 - παρακάτω φτιαχνω ως χωριστά components τα TodoForm TodoList
+- η useReducer είναι μονο στο μητρικό component και στα child περνάω μονο την dispatch. παρολα αυτά το type πρέπει να δηλωθέι και στο παιδί. (το σωστό θα ήταν να είχα κάπου δηλωμένα τα types και να τα καλώ απο εκεί. ToDo αργότερα)
 ```tsx
 import { useReducer } from 'react';
 import TodoForm from "./TodoForm.tsx";
@@ -1227,22 +1228,26 @@ type TodoProps = {
   text:string;
 }
 
-// φτιάχνω το action του reducer
+// φτιάχνω το action του reducer 
 type Action =
   | {type: "ADD"; payload: string}
   | {type: "DELETE"; payload: number}
 
 // φτιάχνω τον reducer με το switch για τα διάφορα action
+// επιστρέφει ': TodoProps[]'
 const todoReducer = (state: TodoProps[], action: Action): TodoProps[] => {
   switch (action.type) {
+    // το todo είναι array απο objects. Πρέπει να φτιάξω ένα νέο obj και να το προσθέσω στο arr
     case "ADD":{
       const newTodo: TodoProps = {
         id: Date.now(),
         text: action.payload,
       };
+      // spread oparator
       return [...state, newTodo];
     }
     case "DELETE":
+      // το delete γινετε με filter oπου κράτάει μονο όποιο δεν έχει το id Που ψάχνω
       return state.filter(todo => todo.id !== action.payload);
     default:
       return state;
@@ -1256,6 +1261,7 @@ const Todo = () =>{
     <>
       <div className="max-w-sm mx-auto p-6">
         <h1 className="text-center text-2xl mb-4">To-Do List</h1>
+        // 
         <TodoForm dispatch={dispatch} />
         <TodoList todos={todos} dispatch={dispatch} />
       </div>
@@ -1267,9 +1273,15 @@ export default Todo;
 ```
 
 #### TodoForm.tsx
+- `dispatch: React.Dispatch<Action>`
+- `(e: React.ChangeEvent<HTMLInputElement>)` και `e.target.value`
+- οπως επίσης `(e: React.FormEvent)`
+- στο onSubmit συμμαντικό `dispatch({type: "ADD", payload: text});`
+
 ```tsx
 import { useState } from "react";
 
+// δεν κατάλαβα γιατί δηλώνουμε ξανα το action του reducer και δεν είναι στο Parent αρχειο
 type Action =
   | {type: "ADD"; payload: string}
   | {type: "DELETE"; payload: number}
@@ -1279,16 +1291,20 @@ type TodoFormProps = {
   dispatch: React.Dispatch<Action>;
 };
 
+// το μόνο Prop που έχει είναι το dispatch το οποίο μάλιστα ορίζετε στο ίδιο component
 const TodoForm = ({ dispatch }: TodoFormProps) => {
 
   const [text, setText] = useState("");
 
+  // φτιάχνω ένα state και μια handleChange για να ακολουθεί τη δακτυλογράφηση το τι προβάλει η οθόνη
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   };
 
+  // για το κουμπί add
   const handleSubmit = (e: React.FormEvent) =>{
     e.preventDefault();
+    // μην το περάσεις αν το μυνημα είναι μόνο spaces
     if (text.trim() !== "") {
       dispatch({type: "ADD", payload: text});
       setText("");
@@ -1338,6 +1354,14 @@ type TodoListProps = {
 
 const TodoList = ({todos, dispatch}: TodoListProps) =>{
 
+// εδω όμως δεν ορισαμε το dispatch type Οπως κάναμε παραπάνω στο TodoFormProps
+//gpt:
+/*
+ Πράγματι, στο TodoList.tsx έχεις περάσει το type του dispatch "επί τόπου":
+dispatch: React.Dispatch<{type: "DELETE"; payload: number}>
+Ενώ στο TodoForm.tsx το έκανες πιο σωστά, ορίζοντας ένα κοινό τύπο Action και τον χρησιμοποιείς έτσι:
+dispatch: React.Dispatch<Action>
+*/
 const handleDelete = (id: number) => () => {
   dispatch({type: "DELETE", payload: id});
 }
