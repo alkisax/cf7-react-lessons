@@ -12,8 +12,8 @@ import Layout from "./components/Layout.tsx";
 // import CounterWithCustomHook from "./components/CounterWithCustomHook.tsx";
 // import CounterAdvanced from "./components/CounterAdvanced.tsx";
 // import CounterAdvancedWithCustomHook from "./components/CounterAdvancedWithCustomHook";
-import CounterWithReducer from "./components/CounterWithReducer.tsx";
-// import Todo from "./components/Todo/Todo.tsx";
+// import CounterWithReducer from "./components/CounterWithReducer.tsx";
+import Todo from "./components/Todo/Todo.tsx";
 
 function App() {
 
@@ -37,8 +37,8 @@ function App() {
         {/* <CounterAdvanced/> */}
         {/* <CounterWithCustomHook/> */}
         {/* <CounterAdvancedWithCustomHook/> */}
-        <CounterWithReducer/>
-        {/* <Todo/> */}
+        {/* <CounterWithReducer/> */}
+        <Todo/>
 
       </Layout>
     </>

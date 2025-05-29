@@ -1120,6 +1120,7 @@ function reducer(state:CounterState, action:Action): CounterState {
        lastAction: "Increase",
        time: getCurrentTime(),
      };
+     // εδώ έχει έναν turnary oparator
    case "DECREASE":
      return state.count > 0
       ? {
@@ -1134,6 +1135,7 @@ function reducer(state:CounterState, action:Action): CounterState {
        lastAction: "Reset",
        time: getCurrentTime(),
      };
+    // αν δεν γίνει καποια αλλαγή το επιστρέφει οπως είναι
    default:
      return state;
  }
@@ -1199,6 +1201,180 @@ function App() {
     <>
       <Layout>
         <CounterWithReducer/>
+      </Layout>
+    </>
+  )
+}
+export default App
+```
+
+# todo
+- μικρό πρότζεκτ todo με τρεία components και useReducer
+- φακελος todo μέσα στα components
+- εικονίδια: `npm install lucide-react`
+
+#### Todo.tsx
+- παρακάτω φτιαχνω ως χωριστά components τα TodoForm TodoList
+```tsx
+import { useReducer } from 'react';
+import TodoForm from "./TodoForm.tsx";
+import TodoList from "./TodoList.tsx";
+
+
+// Πρώτα δηλώνω τους τύπους μου για την ts
+type TodoProps = {
+  id: number;
+  text:string;
+}
+
+// φτιάχνω το action του reducer
+type Action =
+  | {type: "ADD"; payload: string}
+  | {type: "DELETE"; payload: number}
+
+// φτιάχνω τον reducer με το switch για τα διάφορα action
+const todoReducer = (state: TodoProps[], action: Action): TodoProps[] => {
+  switch (action.type) {
+    case "ADD":{
+      const newTodo: TodoProps = {
+        id: Date.now(),
+        text: action.payload,
+      };
+      return [...state, newTodo];
+    }
+    case "DELETE":
+      return state.filter(todo => todo.id !== action.payload);
+    default:
+      return state;
+  }
+};
+
+const Todo = () =>{
+  const [todos, dispatch] = useReducer(todoReducer, []);
+
+  return (
+    <>
+      <div className="max-w-sm mx-auto p-6">
+        <h1 className="text-center text-2xl mb-4">To-Do List</h1>
+        <TodoForm dispatch={dispatch} />
+        <TodoList todos={todos} dispatch={dispatch} />
+      </div>
+    </>
+  )
+};
+
+export default Todo;
+```
+
+#### TodoForm.tsx
+```tsx
+import { useState } from "react";
+
+type Action =
+  | {type: "ADD"; payload: string}
+  | {type: "DELETE"; payload: number}
+
+
+type TodoFormProps = {
+  dispatch: React.Dispatch<Action>;
+};
+
+const TodoForm = ({ dispatch }: TodoFormProps) => {
+
+  const [text, setText] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setText(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent) =>{
+    e.preventDefault();
+    if (text.trim() !== "") {
+      dispatch({type: "ADD", payload: text});
+      setText("");
+    }
+  };
+
+  return (
+    <>
+      <form
+        className="flex gap-4 mb-4"
+        onSubmit={handleSubmit}
+      >
+        <input
+          type="text"
+          value={text}
+          onChange={handleChange}
+          className="flex-1 border p-2 rounded"
+          placeholder="New task.."
+        />
+        <button
+          type="submit"
+          className="bg-cf-dark-gray text-white px-4 py-2 rounded"
+        >
+          Add
+        </button>
+      </form>
+    </>
+  )
+};
+
+export default TodoForm;
+```
+
+#### TodoList.tsx
+```tsx
+import { Trash2 } from "lucide-react";
+
+type Todo = {
+  id: number;
+  text: string;
+}
+
+type TodoListProps = {
+  todos: Todo[];
+  dispatch: React.Dispatch<{type: "DELETE"; payload: number}>
+}
+
+const TodoList = ({todos, dispatch}: TodoListProps) =>{
+
+const handleDelete = (id: number) => () => {
+  dispatch({type: "DELETE", payload: id});
+}
+
+  return (
+    <>
+      <ul className="space-y-2">
+        {todos.map(todo => (
+          <li key={todo.id} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+            <span>{todo.text}</span>
+            <button
+              onClick={handleDelete(todo.id)}
+              className="text-cf-dark-red"
+            >
+              <Trash2 size={18}/>
+            </button>
+          </li>
+          ))}
+      </ul>
+    </>
+  )
+}
+
+export default TodoList;
+```
+
+- App.tsx
+```tsx
+import Layout from "./components/Layout.tsx";
+import Todo from "./components/Todo/Todo.tsx";
+
+function App() {
+
+  return (
+    <>
+      <Layout>
+        <Todo/>
       </Layout>
     </>
   )
