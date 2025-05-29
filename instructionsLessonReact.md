@@ -1066,9 +1066,104 @@ export default App
 ## const [state, dispatch] = useReducer(reducer, initialArg, init?)
 - παίρνει αρχικό state και ένα action 
 
+- πρώτα φτιάχνω το custom hook για τον reducer και μετά τον περνάω στο tsx και τέλος στο App για να προβληθεί
+#### useCounterWithReducer.ts
+- 1-> δηλώνω τύπους 2-> φτιάχνω action 3-> φτιάχνω το initial State 4-> φτιάχνω τον reducer(state,action) 5-> φτιάχνω τον useReducer (reducer, initialState)
+- o reducer παίρνει (state,action) ενώ ο useReducer παίρνει (reducer, initialState)
+
+```ts
+// το είδος της δράσης που θα περάσω μέσα στον reducer (σαν redux)
+// o reducer θέλει αρχικο state και δράση
+type Action =
+  | {type: "INCREASE"}
+  | {type: "DECREASE"}
+  | {type: "RESET"};
+```
+
+
+```ts
+import { useReducer } from 'react';
+
+// πριν απο την κεντρική μου συνάρτηση όρισα διάφορα function types. η εκεντρική είναι αυτήπου κάνω export
+
+// 1. ξεκινάω με τα types
+type CounterState ={
+  count: number;
+  lastAction: string;
+  time: string;
+}
+
+// 2. το είδος της δράσης που θα περάσω μέσα στον reducer (σαν redux)
+// o reducer θέλει αρχικο state και δράση. Η δράση αυτή θα εφαρμοστεί στην συνάρτηση του reducer
+// The '|' symbol in TypeScript is called a union type operator, and it means "OR"
+type Action =
+  | {type: "INCREASE"}
+  | {type: "DECREASE"}
+  | {type: "RESET"};
+
+// 3. φτιάχνω την αρχική μου state
+const initialState: CounterState = {
+  count: 0,
+  lastAction: "",
+  time: "",
+}
+
+const getCurrentTime = () => new Date().toLocaleTimeString();
+
+// 4. o reducer παίρνει (state,action) ενώ ο useReducer παίρνει (reducer, initialState)
+function reducer(state:CounterState, action:Action): CounterState {
+  // περιμένουμε να λάβουμε το action.type και κάνουμε switch για τις τρείς περιπτώσεις
+ switch (action.type) {
+   case "INCREASE":
+     return {
+       count: state.count + 1,
+       lastAction: "Increase",
+       time: getCurrentTime(),
+     };
+   case "DECREASE":
+     return state.count > 0
+      ? {
+         count: state.count - 1,
+         lastAction: "Decrease",
+         time: getCurrentTime(),
+       }
+       : state;
+   case "RESET":
+     return {
+       count: 0,
+       lastAction: "Reset",
+       time: getCurrentTime(),
+     };
+   default:
+     return state;
+ }
+}
+
+// 5.
+export const useCounterWithReducer = () => {
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  // το dispatch έιναι μέρος της συνταξης του useReducer. 
+  // εδώ φτιαχνω 3 συναρτίσεις που αντιστοιχούν στις δράσεις μου. λένε "όταν με καλέίς στέλνω/dispatch μια "λέξη" στο switch"
+  const increase = () => dispatch({type: "INCREASE"});
+  const decrease = () => dispatch({type: "DECREASE"});
+  const reset = () => dispatch({type: "RESET"});
+
+// επιστρέφω τις λειτουργίες μου και το state που πια βρίσκετε εδώ και οχι στο component
+  return {
+    count: state.count,
+    lastAction: state.lastAction,
+    time: state.time,
+    increase,
+    decrease,
+    reset,
+  };
+};
+```
 
 #### CounterWithReducer.tsx
-
+- καλώ το hook που έχει όλη την λογική `const {count, lastAction, time, increase, decrease, reset} = useCounterWithReducer();`
 ```tsx
 import CounterButton from "./CounterButton.tsx";
 import { useCounterWithReducer } from "../hooks/useCounterWithReducer.ts";
@@ -1099,9 +1194,7 @@ export default CounterWithReducer;
 ```tsx
 import Layout from "./components/Layout.tsx";
 import CounterWithReducer from "./components/CounterWithReducer.tsx";
-
 function App() {
-
   return (
     <>
       <Layout>
@@ -1111,5 +1204,4 @@ function App() {
   )
 }
 export default App
-
 ```
