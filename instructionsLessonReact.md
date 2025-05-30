@@ -1408,3 +1408,22 @@ function App() {
 }
 export default App
 ```
+
+- **28/5/2025**
+- pulling git daily version from lesson:
+```bash
+# Fetch tags and branches from the teacher’s remote
+git fetch teacher --tags
+# Create a new branch from the fetched tag
+git checkout -b temp-2025.05.28 2025.05.28
+# Go back to your main branch
+git checkout main
+# Merge the contents from the tag-based branch into your main branch
+# resolve conflicts by opening the files
+git merge temp-2025.05.28
+# Optional: delete the temp branch if merge is successful
+git branch -d temp-2025.05.28
+```
+
+στην περιπτωσή αλλάζουμε το state με setState και στην άλλη με dispatch
+- συνέχεια στο Todo app
