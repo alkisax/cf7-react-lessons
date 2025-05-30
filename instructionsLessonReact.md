@@ -1369,6 +1369,8 @@ const handleDelete = (id: number) => () => {
   return (
     <>
       <ul className="space-y-2">
+        // το todo ήρθε απ'έξω
+        // τα map θέλουν υποχρεωτικά key
         {todos.map(todo => (
           <li key={todo.id} className="flex items-center justify-between bg-gray-100 p-2 rounded">
             <span>{todo.text}</span>
@@ -1376,6 +1378,7 @@ const handleDelete = (id: number) => () => {
               onClick={handleDelete(todo.id)}
               className="text-cf-dark-red"
             >
+              // εικονήδιο οπως το έκκανα import απο την βιβλιοθήκη της Lucid-react
               <Trash2 size={18}/>
             </button>
           </li>
