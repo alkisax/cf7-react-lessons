@@ -1915,3 +1915,110 @@ function App() {
 }
 export default App
 ```
+
+- **3/6/202**
+cf7-react-intro (main)
+```bash
+$ git fetch teacher --tags
+$ git tag
+$ git checkout -b temp-2025.06.03 2025.06.03
+$ git checkout main
+$ git merge temp-2025.06.03 --allow-unrelated-histories
+$ git branch -d temp-2025.06.03
+$ git push origin main
+```
+# αποθήκευση πληροφορίας σε βάση δεδομένων
+
+## αποθήκευση στο local storage
+- todo-app
+#### Todo.tsx
+```tsx
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  },[todos])
+```
+- αν κάνω refressh Μου τα σβήνει γιατι 
+`const [todos, dispatch] = useReducer(todoReducer, []);`, με το [] που έχει μου λέει οτι το initial state είναι κενό. Η useReducer έχει άλλη μια τριτη παράμετρο εκτός απο reducer και state, το Init.
+- φτιαχνω μια ακόμα function
+```tsx
+const getInitialTodos = () => {
+  const stored = localStorage.getItem("todos");
+  return stored ? JSON.parse(stored) : [];
+}
+```
+```tsx
+  const [todos, dispatch] = useReducer(todoReducer, [], getInitialTodos);
+```
+
+## προσθήκη feature
+### clear btn
+#### types.ts
+```tsx
+export type Action =
+  | {type: "ADD"; payload: string}
+  | {type: "DELETE"; payload: number}
+  | {type: "EDIT"; payload: {id: number; newText:string} }
+  | {type: "COMPLETE"; payload: number}
+  | {type: "CLEAR_ALL"}; // θα μου κάνει hard delete όλων των  καταχώρησεων. δεν έχει Payload
+```
+
+#### Todo.tsx
+```tsx
+const todoReducer = (state: TodoProps[], action: Action): TodoProps[] => {
+  switch (action.type) {
+    case "ADD":
+// etc
+    case "DELETE":
+// etc
+    case "EDIT":
+// etc
+    case "COMPLETE":
+// etc
+    case "CLEAR_ALL":
+      return [];
+    default:
+      return state;
+  }
+};
+
+
+ const handleClearAll = () => {
+    dispatch({type: "CLEAR_ALL"});
+ }
+
+// return:
+  <button
+    onClick={handleClearAll}
+    className="bg-cf-dark-red text-white py-2 px-4 rounded"
+  >
+    Clear All
+  </button>
+```
+
+### στατιστικα
+
+#### todo.tsx
+```tsx
+  const totalTasks: number = todos.length;
+  const completedTasks: number = todos.filter(t => t.completed).length;
+  const activeTasks: number = totalTasks - completedTasks;
+
+          { todos.length > 0 && (
+          <>
+            <div className="flex justify-between border-t pt-2 mt-4 text-cf-gray">
+              <span>Total: {totalTasks}</span>
+              <span>Active: {activeTasks}</span>
+              <span>Completed: {completedTasks}</span>
+            </div>
+            <div className="text-end mt-4">
+              <button
+                onClick={handleClearAll}
+                className="bg-cf-dark-red text-white py-2 px-4 rounded"
+              >
+                Clear All
+              </button>
+            </div>
+          </>
+        )}
+```
+1:30:24
