@@ -1927,7 +1927,7 @@ $ git merge temp-2025.06.03 --allow-unrelated-histories
 $ git branch -d temp-2025.06.03
 $ git push origin main
 ```
-# αποθήκευση πληροφορίας σε βάση δεδομένων
+# αποθήκευση πληροφορίας σε lockalstorage
 
 ## αποθήκευση στο local storage
 - todo-app
@@ -2022,3 +2022,57 @@ const todoReducer = (state: TodoProps[], action: Action): TodoProps[] => {
         )}
 ```
 1:30:24
+
+# router (για single page app)
+- επιστρέφω στο react intro
+`npm i react-router`
+- θελω όταν πατάω στο home να πηγένει στην σελίδα χωρίς να κάνει refresh που έχει διάφορα trigger
+
+#### App.tsx
+```tsx
+import Layout from "./components/Layout.tsx";
+import {BrowserRouter, Routes, Route} from "react-router";
+import HomePage from "./pages/HomePage.tsx";
+import NameChangerPage from "./pages/NameChangerPage.tsx";
+
+function App() {
+  return (
+    <>
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<HomePage />}/>
+            <Route path="name-changer" element={<NameChangerPage/>}/>
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </>
+  )
+}
+export default App
+```
+
+- στα αλήθεια δεν κάνουν κάτι αυτές οι σελίδες είναι για επίδειξη
+#### pages/HomePage.tsx
+```tsx
+const HomePage = () => {
+  return (
+    <>
+      <h1 className="text-bold text-2xl text-center mt-8">Home Page</h1>
+    </>
+  )
+};
+export default HomePage;
+```
+#### pages/NameChangerPage.tsx
+```tsx
+import NameChanger from "../components/NameChanger.tsx";
+const NameChangerPage = () => {
+  return (
+    <>
+      <NameChanger/>
+    </>
+  )
+};
+export default NameChangerPage;
+```
