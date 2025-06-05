@@ -2076,3 +2076,46 @@ const NameChangerPage = () => {
 };
 export default NameChangerPage;
 ```
+
+- 4/6/2025
+#### NameChangerPage.tsx
+- το ξαναγράψαμε για να έχει το σωστό τίτλο στο tab. Μέσα σε ένα useEffect με σκέτο [] καλεί `document.title = "CF7 Name Changer"`
+```tsx
+import {useEffect} from 'react';
+import NameChanger from "../components/NameChanger.tsx";
+
+const NameChangerPage = () => {
+
+  useEffect(()=>{
+    document.title = "CF7 Name Changer"
+  }, [])
+
+  return (
+    <>
+      <NameChanger/>
+    </>
+  )
+};
+export default NameChangerPage;
+```
+
+- τα ιδια με online status
+#### OnlineStatusPage.tsx
+```tsx
+import {useEffect} from 'react';
+import OnlineStatus from "../components/OnlineStatus.tsx"
+
+const OnlineStatusPage = () => {
+
+  useEffect(()=>{
+    document.title = "CF7 Online Status"
+  }, [])
+
+  return (
+    <>
+      <OnlineStatus/>
+    </>
+  )
+};
+export default OnlineStatusPage;
+```
