@@ -2078,6 +2078,16 @@ export default NameChangerPage;
 ```
 
 - 4/6/2025
+δεν είχε φτιαξει version αυτή τη φορά και έκανα σκέτο Pull λύνοντας τα conflict
+- 1. See remotes connected
+`git remote -v`
+- 2. Fetch latest changes from teacher repo (does NOT merge)
+`git fetch teacher`
+- 3. Merge the teacher's latest changes into your main
+`git merge teacher/main`
+ - > If there are conflicts, Git will show them in the files
+ - > You fix them manually, then:
+
 #### NameChangerPage.tsx
 - το ξαναγράψαμε για να έχει το σωστό τίτλο στο tab. Μέσα σε ένα useEffect με σκέτο [] καλεί `document.title = "CF7 Name Changer"`
 ```tsx
@@ -2119,3 +2129,94 @@ const OnlineStatusPage = () => {
 };
 export default OnlineStatusPage;
 ```
+
+### για να έχω ένα nav με λίνκσ
+#### components/Header.tsx
+```tsx
+import {Link} from "react-router";
+import CodingFactoryLogo from "./CodingFactoryLogo.tsx";
+
+const Header = () => {
+  return (
+    <>
+      <header className="bg-[#782024] fixed w-full">
+        <div className="container mx-auto px-4 flex items-center justify-between">
+          <CodingFactoryLogo />
+          <nav className="flex gap-4">
+            {/*<a href="/" className="text-white hover:underline hover:underline-offset-4">Home</a>*/}
+            <Link to="/" className="text-white hover:underline hover:underline-offset-4">Home</Link>
+            <Link to="/examples/name-changer" className="text-white hover:underline hover:underline-offset-4">Name Changer</Link>
+          </nav>
+        </div>
+      </header>
+    </>
+  )
+}
+export default Header;
+```
+
+- θέλω να έχω δυο view για μικρές και μεγάλες οθόνες και στο μικρο να έχω hamburger/X
+- ένα btn που κάνει toggle το state για το αν το μενου είναι ανοιχτό ή κλειστο και αντίστοιχα να αλλάζει το εικονήδιο του μενου
+```tsx
+<button
+  // md:hidden να μην φαίνετε οταν η οθόνη είναι μεγάλη (Medioum desplay)
+  className="text-white md:hidden"
+  onClick={()=> setMenuOpen(!menuOpen)}
+>
+  { menuOpen ? <X size={36}/> : <Menu size={36}/> }
+</button>
+```
+#### HeaderResponsive.tsx
+```tsx
+import {useState} from "react";
+import {Link} from "react-router";
+// τα icon 
+import {Menu, X} from "lucide-react";
+import CodingFactoryLogo from "./CodingFactoryLogo.tsx";
+
+const HeaderResponsive = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  return (
+    <>
+      <header className="bg-[#782024] fixed w-full">
+        <div className="container mx-auto px-4 flex items-center justify-between">
+          <CodingFactoryLogo />
+          <button
+            className="text-white md:hidden"
+            onClick={()=> setMenuOpen(!menuOpen)}
+          >
+            { menuOpen ? <X size={36}/> : <Menu size={36}/> }
+          </button>
+          <nav
+            className={`${
+              menuOpen ? "block" : "hidden"
+            } md:flex gap-4 bg-cf-dark-red text-white  absolute top-24 left-0 w-full md:w-auto md:static p-4 md:p-0`}
+          >
+            {/*<a href="/" className="text-white hover:underline hover:underline-offset-4">Home</a>*/}
+            <Link
+              to="/"
+              className="block md:inline hover:underline hover:underline-offset-4"
+              onClick={()=> setMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link
+              to="/examples/name-changer"
+              className=" block md-inline hover:underline hover:underline-offset-4"
+              onClick={()=> setMenuOpen(false)}
+            >
+              Name Changer
+            </Link>
+          </nav>
+        </div>
+      </header>
+    </>
+  )
+}
+export default HeaderResponsive;
+```
+
+
+48:19
+

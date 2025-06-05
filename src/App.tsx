@@ -22,7 +22,7 @@ import NameChangerPage from "./pages/NameChangerPage.tsx";
 // import NameChanger from "./components/NameChanger.tsx";
 import OnlineStatusPage from "./pages/OnlineStatusPage.tsx";
 import UserPage from "./pages/UserPage.tsx";
-import RouterLayout from "./components/RouterLayout.tsx";
+import RouterLayout from "./components/RouterExamplesLayout.tsx";
 import ExamplesPage from "./pages/ExamplesPage.tsx";
 import RouterExamplesLayout from "./components/RouterExamplesLayout";
 
