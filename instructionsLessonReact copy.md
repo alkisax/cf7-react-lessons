@@ -2157,7 +2157,7 @@ export default Header;
 
 - θέλω να έχω δυο view για μικρές και μεγάλες οθόνες και στο μικρο να έχω hamburger/X
 - ένα btn που κάνει toggle το state για το αν το μενου είναι ανοιχτό ή κλειστο και αντίστοιχα να αλλάζει το εικονήδιο του μενου
-```tsx
+```jsx
 <button
   // md:hidden να μην φαίνετε οταν η οθόνη είναι μεγάλη (Medioum desplay)
   className="text-white md:hidden"
@@ -2167,7 +2167,7 @@ export default Header;
 </button>
 ```
 #### HeaderResponsive.tsx
-```tsx
+```jsx
 import {useState} from "react";
 import {Link} from "react-router";
 // τα icon 
@@ -2188,6 +2188,8 @@ const HeaderResponsive = () => {
           >
             { menuOpen ? <X size={36}/> : <Menu size={36}/> }
           </button>
+// το block ή hidden είναι μέσα στο className
+// το absolut το σπρώχνει στα αριστερα και με τα διάφορα md το σπρώχνει απο κάτω
           <nav
             className={`${
               menuOpen ? "block" : "hidden"
@@ -2197,6 +2199,7 @@ const HeaderResponsive = () => {
             <Link
               to="/"
               className="block md:inline hover:underline hover:underline-offset-4"
+// θα πρέπει κάθε φορα που πατάω το μενου να το κλείνει κιόλας για να μην πατάει το υπόλοιπο περιεχόμενο
               onClick={()=> setMenuOpen(false)}
             >
               Home
@@ -2216,7 +2219,252 @@ const HeaderResponsive = () => {
 }
 export default HeaderResponsive;
 ```
-
-
 48:19
+### user page
+
+#### App.tsx
+```tsx
+import {BrowserRouter, Routes, Route} from "react-router";
+import HomePage from "./pages/HomePage.tsx";
+import UserPage from "./pages/UserPage.tsx";
+import RouterLayout from "./components/RouterExamplesLayout.tsx";
+
+function App() {
+  return (
+    <>
+      <BrowserRouter>
+          <Routes>
+            <Route element={<RouterLayout />}>
+            <Route index element={<HomePage />}/>
+// με : το path για να πάρει parameters
+// η σελιδα θα προστεθει παρα κάτω
+            <Route path="users/:userId" element={<UserPage />}/>
+            <Route path="users" element={<UserPage />}/>
+          </Route>
+      </BrowserRouter>
+    </>
+  )
+}
+export default App
+```
+
+#### UserPage.tsx
+- `useParams()`
+```jsx
+import {useEffect} from "react";
+import {useParams} from "react-router";
+
+const UserPage = () =>{
+  const { userId } = useParams();
+
+  useEffect(()=>{
+    document.title = `CF7 User id: ${ userId }`;
+  }, [userId]);
+
+  return(
+    <>
+      <h1>user with id: {userId}</h1>
+    </>
+  )
+}
+export default UserPage;
+```
+
+### children/Outlet
+#### RouterLayout.tsx
+ - με * οτι path και να δημιουργηθεί`<Route path="files/*" element={<FilePage/>}/>`
+ - θα αλλάξουμε το {children} απο το Layout.tsx για να βάλουμε το κατάληλο για react router
+ - αντι για {childrean} `<Outlet />` και `import {Outlet} from "react-router";`
+```jsx
+import {Outlet} from "react-router";
+import HeaderResponsive from "./HeaderResponsive";
+import Footer from "./Footer";
+
+const RouterLayout = () => {
+  return (
+    <>
+      <HeaderResponsive />
+      <div className="container mx-auto min-h-[95vh] pt-24">
+        <Outlet/>
+      </div>
+      <Footer />
+    </>
+  )
+}
+export default RouterLayout;
+```
+
+- έτσι ήταν πριν το Layout.tsx
+
+```tsx
+import React from "react";
+// import Header from "./Header.tsx";
+import Footer from "./Footer.tsx";
+import HeaderResponsive from "./HeaderResponsive.tsx";
+
+interface LayoutProps{
+  children: React.ReactNode;
+}
+
+const Layout = ({children}:LayoutProps) => {
+  return (
+    <>
+      {/*<Header/>*/}
+      <HeaderResponsive/>
+        <div className="container mx-auto min-h-[95vh] pt-24">
+          {children}
+        </div>
+      <Footer/>
+    </>
+  )
+}
+
+export default Layout;
+```
+
+#### RouterExamplesLayout.tsx
+- ευτιαξα ένα διαφορετικο Layout για να δείξω πως μπορω να χρησιμοποιήσω διαφορετικό
+
+```tsx
+import {Outlet} from "react-router";
+import HeaderResponsive from "./HeaderResponsive";
+import Footer from "./Footer";
+import ExamplesSection from "./ExamplesSection.tsx";
+
+const RouterExamplesLayout = () => {
+  return (
+    <>
+      <HeaderResponsive />
+      <div className="container mx-auto min-h-[65vh] pt-24">
+        <Outlet/>
+      </div>
+// εδώ έχει ένα επιπλέον component
+      <ExamplesSection/>
+      <Footer />
+    </>
+  )
+}
+export default RouterExamplesLayout;
+```
+
+#### ExamplesSection.tsx
+- η διαφορα του Link με το NavLink είναι οτι χρησιμοποιείτε για να είναι active ή οχι. Αυτό μου περνάει απο την βιβλιοθήκη ένα property, isActive και με 
+```jsx
+  className={({isActive}) =>
+    isActive ? "text-cf-dark-red underline underline-offset-4" : "text-cf-gray" }
+```
+```jsx
+import {NavLink} from "react-router"
+const ExamplesSection = () => {
+// φτιάχνω μια λίστα που θα έχει όλα τα λινκ
+  return (
+    <>
+      <div className="bg-gray-200 py-24">
+        <ul className="container mx-auto flex justify-center space-x-4">
+          <li>
+            <NavLink
+              to="/examples/name-changer"
+              className={({isActive}) =>
+                isActive ? "text-cf-dark-red underline underline-offset-4" : "text-cf-gray" }
+            >
+              Name Changer
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/examples/online-status"
+              className={({isActive}) =>
+                isActive ? "text-cf-dark-red underline underline-offset-4" : "text-cf-gray" }
+            >
+              Online Status
+            </NavLink>
+          </li>
+        </ul>
+      </div>
+    </>
+  )
+}
+export default ExamplesSection;
+```
+
+- το App πρέπει να αλλαξει γιατι δεν έιναι ιδιο με children οπου τα βάζαμε όλα σε `<Layout></Layout>`. Τώρα
+```tsx
+    <Route element={<RouterLayout />}>
+      <Route index element={<HomePage />}/>
+    </Route>
+```
+Που σημαίνει οτι θα μπορούσα να έχω διαφορετικό Layout για κάθε σελίδα. πχ:
+```tsx
+    <Route element={<RouterLayout />}>
+      <Route index element={<HomePage />}/>
+    </Route>
+    <Route element={<RouterLayout2 />}>
+      <Route index element={<LoginPage />}/>
+    </Route>
+```
+
+- App.tsx
+```tsx
+import {BrowserRouter, Routes, Route} from "react-router";
+import HomePage from "./pages/HomePage.tsx";
+import NameChangerPage from "./pages/NameChangerPage.tsx";
+import OnlineStatusPage from "./pages/OnlineStatusPage.tsx";
+import UserPage from "./pages/UserPage.tsx";
+import RouterLayout from "./components/RouterExamplesLayout.tsx";
+import ExamplesPage from "./pages/ExamplesPage.tsx";
+import RouterExamplesLayout from "./components/RouterExamplesLayout";
+
+function App() {
+  return (
+    <>
+      <BrowserRouter>
+          <Routes>
+            <Route element={<RouterLayout />}>
+              <Route index element={<HomePage />}/>
+              <Route path="users/:userId" element={<UserPage />}/>
+              <Route path="users" element={<UserPage />}/>
+            </Route>
+
+// διαφορετικο σχεδιαστικο ανα ομάδες σελίδων
+            <Route path="examples"  element={<RouterExamplesLayout/>}>
+              <Route index element={<ExamplesPage/>}/>
+              <Route path="name-changer" element={<NameChangerPage/>}/>
+              <Route path="online-status" element={<OnlineStatusPage/>}/>
+            </Route>
+
+            <Route path="users/:userId" element={<UserPage />}/>
+            <Route path="users" element={<UserPage />}/>
+          </Routes>
+      </BrowserRouter>
+    </>
+  )
+}
+```
+- διαφορα path με query parameter
+```url
+PATH: https://example.com/users/125/name/nick
+QUERY: https://example.com/users?id=125&name=Nick
+https://www.skroutz.gr/c/3074/pagomixanes/f/891854_891908_1066530/trima-epagelmatiki-101-200.html?price_max=3200.0&price_min=1400.001
+```
+
+#### ExamplesPage.tsx
+```tsx
+import {useEffect} from 'react';
+
+const ExamplesPage = () => {
+
+  useEffect(()=>{
+    document.title = 'Examples';
+  }, []);
+
+  return (
+    <>
+      <h1 className="text-2xl font-bold mt-12">Examples</h1>
+    </>
+  )
+}
+export default ExamplesPage;
+```
+
+
 
