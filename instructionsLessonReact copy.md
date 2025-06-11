@@ -2687,4 +2687,201 @@ export default NotFoundPage;
 - χρησιμοποιείτε για να αλλάξουμε κάτι στο html  
   
 θέλουμε να κάνουμε foqus σε κάποιο στοιχείο της σελίδας.  
-- 
+```jsx
+import { useState, useEffect, useRef } from 'react';
+const ref = useRef(initialValue)
+ref.current = 0
+```
+
+#### cf7-react-intro\src\components\FocusInput.tsx
+```jsx
+inputRef.current?.focus();
+
+<input
+  ref={inputRef}
+/>
+```
+```jsx
+import {useRef} from "react";
+
+const FocusInput = () => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleClick = () => {
+    inputRef.current?.focus();
+  };
+
+  return(
+    <>
+      <div className="text-center space-x-4 mt-4">
+        <input
+          ref={inputRef}
+          type="text" className="border px-4 py-2 rounded"/>
+        <button
+          onClick={handleClick}
+          className="bg-cf-dark-gray text-white px-4 py-2 rounded">
+          Focus Input
+        </button>
+      </div>
+    </>
+  );
+};
+
+export default FocusInput;
+```
+
+- App.tsx
+```jsx
+<Route element={<RouterLayout />}>
+  <Route index element={<FocusInput />}/>
+  <Route path="users/:userId" element={<UserPage />}/>
+  <Route path="users" element={<UserPage />}/>
+</Route>
+```
+
+**Παω στο todo app**
+- 1. Fetch latest changes from teacher repo (does NOT merge)
+`git fetch teacher`
+- 2. Merge the teacher's latest changes into your main
+`git merge teacher/main`
+
+#### cf7-react-todo-app\src\components\Todo.tsx
+```jsx
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(()=>{
+    inputRef.current?.focus();
+  }, []);
+
+  //...
+  <TodoForm dispatch={dispatch} inputRef={inputRef} />
+```
+
+#### cf7-react-todo-app\src\types.ts
+```ts
+export type TodoFormProps = {
+  dispatch: React.Dispatch<Action>;
+  inputRef: React.RefObject<HTMLInputElement | null>;
+};
+```
+
+#### cf7-react-todo-app\src\components\TodoForm.tsx
+```jsx
+const TodoForm = ({ dispatch, inputRef }: TodoFormProps) => {
+
+    const handleSubmit = (e: React.FormEvent) =>{
+    e.preventDefault();
+    if (text.trim() !== "") {
+      dispatch({type: "ADD", payload: text});
+      setText("");
+      inputRef.current?.focus();
+    }
+  };
+  // ...
+
+      <form
+        onSubmit={handleSubmit}
+      >
+        <input
+          ref={inputRef}
+          type="text"
+          value={text}
+          onChange={handleChange}
+          placeholder="New task.."
+        />
+        <button
+          type="submit"
+        >
+          Add
+        </button>
+      </form>
+}
+```
+
+**επιστρέφουμε στο intro app**
+## controled/uncontrolled input Με ref
+- δυναμική αλλαγή περιεχομένου
+
+-> controled input  
+#### cf7-react-intro\src\components\ControlledInput.tsx
+```jsx
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
+  setName(e.target.value);
+}
+```
+```jsx
+import {useState} from "react";
+
+const ControlledInput = () => {
+  const [name, setName] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
+    setName(e.target.value);
+  }
+  return(
+    <>
+      <div className="text-center">
+        <input
+          value={name}
+          onChange={handleChange}
+          type="text"
+          className="border rounded px-4 py-2"
+        />
+      </div>
+    </>
+  )
+};
+
+export default ControlledInput;
+```
+
+-> uncontroled input  
+#### cf7-react-intro\src\components\UncontrolledInput.tsx
+```jsx
+import {useRef} from "react";
+
+const UncontrolledInput = () => {
+  // const [name, setName] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
+    // setName(e.target.value);
+  // }
+
+  const handleClick = () => {
+    alert(` Value: ${inputRef.current?.value}`);
+  };
+
+  return(
+    <>
+      <div className="text-center mt-8 space-x-4">
+        <input
+          ref={inputRef}
+          type="text"
+          className="border rounded px-4 py-2"
+        />
+        <button
+          onClick={handleClick}
+          className="bg-cf-dark-red text-white px-4 py-2 rounded">
+          Show Value
+        </button>
+      </div>
+    </>
+  )
+};
+
+export default UncontrolledInput;
+```
+
+- Ap.tsx
+```jsx
+<Route path="examples"  element={<RouterExamplesLayout/>}>
+  <Route index element={<ExamplesPage/>}/>
+  <Route path="name-changer" element={<NameChangerPage/>}/>
+  <Route path="online-status" element={<OnlineStatusPage/>}/>
+  <Route path="auto-redirect" element={<AutoRedirectPage/>}/>
+  <Route path="controlled-input" element={<ControlledInput />}/>
+  <Route path="uncontrolled-input" element={<UncontrolledInput />}/>
+  <Route path="focus-input" element={<FocusInput />}/>
+</Route>
+```
