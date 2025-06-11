@@ -17,7 +17,7 @@
 // import Todo from "./components/Todo/Todo.tsx";
 // import OnlineStatus from "./components/OnlineStatus.tsx";
 import {BrowserRouter, Routes, Route} from "react-router";
-import HomePage from "./pages/HomePage.tsx";
+// import HomePage from "./pages/HomePage.tsx";
 import NameChangerPage from "./pages/NameChangerPage.tsx";
 // import NameChanger from "./components/NameChanger.tsx";
 import OnlineStatusPage from "./pages/OnlineStatusPage.tsx";

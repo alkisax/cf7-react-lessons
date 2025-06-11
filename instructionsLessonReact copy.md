@@ -2465,6 +2465,226 @@ const ExamplesPage = () => {
 }
 export default ExamplesPage;
 ```
+10/6/25
+- 1. Fetch latest changes from teacher repo (does NOT merge)
+`git fetch teacher`
+- 2. Merge the teacher's latest changes into your main
+`git merge teacher/main`
+
+γενικά αυτός φτιάχνει μια σελίδα ως view και μέσα σε αυτή την σελίδα βάζει τα component της ακόμα και αν αυτή η σελίδα δεν έχει τιποτα άλλο εκτός απο ένα μόνο component  
+
+## autoredirect/navigate
+#### cf7-react-intro\src\components\AutoRedirect.tsx
+- `const navigate = useNavigate();`  
+- `navigate("/examples/name-changer");`  
+```jsx
+import {useEffect} from "react";
+import {useNavigate} from "react-router";
+
+const AutoRedirect = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const timer: number = setTimeout(() => {
+      navigate("../pages/AutoRedirectPage.tsx");
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [])
+
+  return (
+    <>
+      <h1 className="text-center text-2xl mb-4">
+        Redirecting in 5 seconds...
+      </h1>
+    </>
+  )
+};
+
+export default AutoRedirect;
+```
+#### cf7-react-intro\src\pages\AutoRedirectPage.tsx
+```jsx
+import {useEffect} from "react";
+// import AutoRedirect from "../components/AutoRedirect.tsx";
+import AutoRedirectAdvanced from "../components/AutoRedirectAdvanced.tsx";
+
+const AutoRedirectPage = () => {
+  useEffect(()=>{
+    document.title = "CF7 Auto Redirect Example";
+  }, []);
+
+  return (
+    <>
+      {/*<AutoRedirect/>*/}
+      <AutoRedirectAdvanced/>
+    </>
+  )
+};
+export default AutoRedirectPage;
+```
+##### App.tsx
+```jsx
+import {BrowserRouter, Routes, Route} from "react-router";
+import NameChangerPage from "./pages/NameChangerPage.tsx";
+import OnlineStatusPage from "./pages/OnlineStatusPage.tsx";
+import UserPage from "./pages/UserPage.tsx";
+import RouterLayout from "./components/RouterExamplesLayout.tsx";
+import ExamplesPage from "./pages/ExamplesPage.tsx";
+import RouterExamplesLayout from "./components/RouterExamplesLayout";
+import AutoRedirectPage from "./pages/AutoRedirectPage.tsx";
+import NotFoundPage from "./pages/NotFoundPage.tsx";
+import FocusInput from "./components/FocusInput.tsx";
+
+function App() {
+  return (
+    <>
+      <BrowserRouter>
+          <Routes>
+            <Route element={<RouterLayout />}>
+              {/*<Route path="/" element={<HomePage />}/>*/}
+              {/*<Route index element={<HomePage />}/>*/}
+              <Route index element={<FocusInput />}/>
+              <Route path="users/:userId" element={<UserPage />}/>
+              <Route path="users" element={<UserPage />}/>
+            </Route>
+
+            {/*<Route path="examples?" >*/}
+            <Route path="examples"  element={<RouterExamplesLayout/>}>
+              <Route index element={<ExamplesPage/>}/>
+              <Route path="name-changer" element={<NameChangerPage/>}/>
+              <Route path="online-status" element={<OnlineStatusPage/>}/>
+              <Route path="auto-redirect" element={<AutoRedirectPage/>}/>
+            </Route>
+
+            <Route path="users/:userId" element={<UserPage />}/>
+            <Route path="users" element={<UserPage />}/>
+            {/*<Route path="files/*" element={<FilePage/>}/>*/}
+            <Route path="*"  element={<NotFoundPage/>}/>
+
+          </Routes>
+      </BrowserRouter>
+
+    </>
+  )
+}
+
+export default App
+```
+
+### επεκτείνω λιγο το app 
+### θα προστεθεί ένα countdown
+#### cf7-react-intro\src\components\AutoRedirectAdvanced.tsx
+- `setSecondsLeft((prev:number)=> prev - 1)`
+```jsx
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router";
+
+const AutoRedirectAdvanced = () => {
+  const navigate = useNavigate();
+  const [secondsLeft, setSecondsLeft] = useState(5);
+
+  useEffect(() => {
+    const intervalId:number = setInterval(() => {
+        setSecondsLeft((prev:number)=> prev - 1);
+      }, 1000);
+
+    const timer: number = setTimeout(() => {
+      navigate("/examples/name-changer");
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+      clearTimeout(timer);
+    };
+
+  }, [])
+
+  return (
+    <>
+      <h1 className="text-center text-2xl mb-4">
+        Redirecting in {secondsLeft} second{secondsLeft !== 1 && "s"}...
+      </h1>
+    </>
+  )
+};
+
+export default AutoRedirectAdvanced;
+```
+
+### catch all
+- `<Route path="*"  element={<NotFoundPage/>}/>` Πρέπει να μπεί στο τέλος  
+#### App.tsx
+```jsx
+      <BrowserRouter>
+          <Routes>
+            <Route element={<RouterLayout />}>
+              {/*<Route path="/" element={<HomePage />}/>*/}
+              {/*<Route index element={<HomePage />}/>*/}
+              <Route index element={<FocusInput />}/>
+              <Route path="users/:userId" element={<UserPage />}/>
+              <Route path="users" element={<UserPage />}/>
+            </Route>
+
+            {/*<Route path="examples?" >*/}
+            <Route path="examples"  element={<RouterExamplesLayout/>}>
+              <Route index element={<ExamplesPage/>}/>
+              <Route path="name-changer" element={<NameChangerPage/>}/>
+              <Route path="online-status" element={<OnlineStatusPage/>}/>
+              <Route path="auto-redirect" element={<AutoRedirectPage/>}/>
+            </Route>
+
+            <Route path="users/:userId" element={<UserPage />}/>
+            <Route path="users" element={<UserPage />}/>
+            {/*<Route path="files/*" element={<FilePage/>}/>*/}
+            <Route path="*"  element={<NotFoundPage/>}/>
+
+          </Routes>
+      </BrowserRouter>
+```
+
+#### cf7-react-intro\src\pages\NotFoundPage.tsx
+- link:
+```jsx
+import {Link} from "react-router";
+<Link to="/">
+  Go back to Home
+</Link>
+```
+```jsx
+import {useEffect} from "react";
+import {Link} from "react-router";
+
+const NotFoundPage = () => {
+
+  useEffect(()=> {
+    document.title = "Error 404: Page not found";
+  })
+
+  return (
+    <>
+      <div className="text-center py-36 space-y-6">
+        <h1 className="text-9xl font-bold text-cf-dark-red">404</h1>
+        <p className="text-4xl text-cf-dark-gray">Page not found</p>
+        <p className="text-lg text-cf-gray">The page you are looking for does not exist.</p>
+        <Link to="/"
+              className="bg-cf-dark-red text-white px-4 py-2 rounded">
+          Go back to Home
+        </Link>
+      </div>
+      </>
+  )
+};
+
+export default NotFoundPage;
+```
 
 
-
+# useRef
+## ref 
+θέλουμε να θημάτε μια πληροφορία αλλα δεν θέλουμε να ποκληθεί νέο render οπως κάνει το απλό state  
+- θημάτε πράγματα μεταξύ των render
+- δεν προκαλεί render
+- χρησιμοποιείτε για να αλλάξουμε κάτι στο html  
+  
+θέλουμε να κάνουμε foqus σε κάποιο στοιχείο της σελίδας.  
+- 

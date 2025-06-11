@@ -6,7 +6,7 @@ const AutoRedirect = () => {
 
   useEffect(() => {
     const timer: number = setTimeout(() => {
-      navigate("/examples/name-changer");
+      navigate("../pages/AutoRedirectPage.tsx");
     }, 5000);
     return () => clearTimeout(timer);
   }, [])
