@@ -3461,3 +3461,6 @@ import path from "path"
 
 `npx shadcn@latest init`  
 
+εγκαθηστούμε χωριστά το κάθε component πχ btn
+`npx shadcn@latest add button`  
+μου δημιούργησε αρχείο `cf7-react-intro\src\components\ui\button.tsx`  

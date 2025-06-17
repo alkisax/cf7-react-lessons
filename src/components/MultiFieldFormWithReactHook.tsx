@@ -1,6 +1,7 @@
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button"
 
 const formSchema = z.object({
   name: z.string().trim().nonempty("Name is required."),
@@ -98,6 +99,7 @@ const MultiFieldFormWithReactHook = () => {
               Clear
             </button>
           </div>
+          <Button variant="outline">Button</Button>
         </form>
             <div className="mt-6 border-t pt-4 space-y-2">
               <h2 className="font-semibold">Live Data</h2>
