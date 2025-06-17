@@ -44,7 +44,7 @@ https://tailwindcss.com/docs/installation/using-vite
 - pages/ViteIntro.tsx
 τα έκανα κοπι πειστ απο το app για να τα έχω σε χωριστά αρχεία
 - - `export default ViteIntro` συμαντικό
-```tsx
+```jsx
 import { useState } from 'react'
 import reactLogo from '../assets/react.svg'  //αυτά στην μετακόμιση μπορεί να χρειάζονται αλλαγή
 import viteLogo from '/vite.svg'
@@ -150,7 +150,7 @@ import FunctionalComponent from "./components/FunctionalComponent.tsx";
 
 ### ArrowFunctionalComponent
 #### ArrowFunctionalComponent.tsx
-```tsx
+```jsx
 const ArrowFunctionalComponent = () => {
 const title: string = "Is a Arrow Functional Component";
 return <h1 className="text-center text-xl font-bold mt-12">{title}</h1>;
@@ -289,13 +289,13 @@ import CodingFactoryLogo from "./components/CodingFactoryLogo.tsx";
 - προσοχή εδώ είναι tsx όποτε χριάζετε να δηλώνω τύπο και interface η type
 - `children: React.ReactNode` δεν είναι string boolean κλπ είναι ReactNode δηλ ένα εγγυρο αντικείμενο της react. θα μπορούσε να είναι και component
 - απο το viewport θα πάρεις το 95% `min-h-[95vh]` πάμε το περιεχόμενο λίγο πιο κάτω `min-h-[95vh] pt-24`
-```tsx
+```jsx
 interface LayoutProps{
   children: React.ReactNode;
 }
 const Layout = ({children}:LayoutProps) => {}
 ```
-```tsx
+```jsx
 import React from "react";
 import Header from "./Header.tsx";
 import Footer from "./Footer.tsx";
@@ -331,7 +331,7 @@ import Layout from "./components/Layout.tsx";
 - Πάει την γραμμη του λινκ πιο κατω `hover:underline hover:underline-offset-4`
 - `px-4` και δεξια και αριστερά
 - αργότερα θα αλλάξουμε το `<a>` με router
-```tsx
+```jsx
 import CodingFactoryLogo from "./CodingFactoryLogo.tsx";
 
 const Header = () => {
@@ -350,7 +350,7 @@ export default Header;
 ```
 
 #### Footer.tsx
-```tsx
+```jsx
 const Footer = () => {
   const currentYear: number = new Date().getFullYear();
 
@@ -407,7 +407,7 @@ type State = {
 ```
  
 
-```tsx
+```jsx
 import { Component } from "react";
 
 type State = {
@@ -458,7 +458,7 @@ export default ClassComponentWithState;
 ```
 
 - App.tsx
-```tsx
+```jsx
 import ClassComponentWithState from "./components/ClassComponentWithState.tsx";
     <>
       <Layout>
@@ -469,12 +469,12 @@ import ClassComponentWithState from "./components/ClassComponentWithState.tsx";
 
 #### FunctionalComponentWithState.tsx
 - εδω η συνταξη του useState
-```tsx
+```jsx
 import { useState } from "react";
 const [count,setCount] = useState(0);
 ```
 - καλώ τις function χωρις (): `onClick={resetCount}`
-```tsx
+```jsx
 import { useState } from "react";
 
 const FunctionalComponentWithState = ( ) => {
@@ -528,7 +528,7 @@ import FunctionalComponentWithState from "./components/FunctionalComponentWithSt
 #### Counter.tsx
 - θα πρέπει να φτιαχτεί το CounterButton
 - η σύνταξη για να περάσω Props στα child component `<CounterButton onClick={resetCount} disabled={count === 0} label="Reset" addClass="bg-cf-dark-red"/>`, αλλου ={}, αλλού ={x>==y}, αλλου =""
-```tsx
+```jsx
 import { useState } from "react";
 import CounterButton from "./CounterButton.tsx";
 
@@ -576,7 +576,7 @@ export default Counter;
 - ιδιο και με `addClass?: string;`, `addClass = "bg-cf-dark-gray"`
 - προσοχή πως περνάω κλάσεις και αλλαγή τους απο τον πατέρα. πχ `className={"disabled:bg-gray-600 text-white py-2 px-4 " + addClass}` (προσοχή θέλει ένα ' ')
 
-```tsx
+```jsx
 type ButtonProps = {
   onClick: () => void;
   disabled?: boolean;
@@ -649,7 +649,7 @@ This publishes your merged changes online.
 - λογο ts: `(e: React.ChangeEvent<HTMLInputElement>)`
 - `e.target.value`
 
-```tsx
+```jsx
 import { useState } from 'react';
 
 const NameChanger = () => {
@@ -694,7 +694,7 @@ export default App
 
 #### CounterWithMoreStates.tsx
 
-```tsx
+```jsx
 import {useState} from "react";
 import CounterButton from "./CounterButton.tsx";
 
@@ -789,7 +789,7 @@ type CounterState ={
 }
 ```
 
-```tsx
+```jsx
 import {useState} from 'react';
 import CounterButton from "./CounterButton.tsx";
 
@@ -877,7 +877,7 @@ export default App
 - τα βάζω στον φάκελο hooks. Συνηθίζετε να τα ονομαζω με το προθεμα use. Και είναι αρχείο ts (οχι tsx). και δεν εχουμε επιστροφή jsx/tsx
 - `export const` και `return {count, increase, decrease, reset};`
 
-```ts
+```js
 import { useState } from "react";
 
 export const useCounter = () => {
@@ -905,7 +905,7 @@ export const useCounter = () => {
 #### CounterWithCustomHook.tsx
 - παίρνω την λογική απο το custom hook `const { count, increase, decrease, reset } = useCounter();`
 - state.count -> count etc.
-```tsx
+```jsx
 import CounterButton from "./CounterButton.tsx";
 import { useCounter } from "../hooks/useCounter.ts"
 
@@ -961,7 +961,7 @@ export default App
     reset
   };
 ```
-```ts
+```js
 import {useState} from 'react';
 
 type CounterState ={
@@ -3091,9 +3091,373 @@ type FormErrors = {
 
 ## zod (βιβλιοθήκη validation)
 `npm install i zod`  
+
+- 16/6/2025  
+`git fetch teacher`  
+`git merge teacher/main`  
+
 #### cf7-react-intro\src\components\MultiFieldFormWithZodValidation.tsx
+```jsx
+import {useState} from "react";
+import {z} from "zod";
+
+const formSchema = z.object({
+  name: z.string().trim().nonempty("Name is required."),
+  email: z
+    .string()
+    .trim()
+    .nonempty("Email is required.")
+    .email("Email is invalid."),
+  message: z.string()
+    .trim()
+    .nonempty("Message is required.")
+    .min(5, "Message must be at least 5 characters.")
+    .max(8, "Message must be at most 8 characters."),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+type FormErrors = {
+  name?: string;
+  email?: string;
+  message?: string;
+};
+
+const initialValues = {
+  name: "",
+  email: "",
+  message: "",
+};
+
+const MultiFieldFormWithZodValidation = () => {
+  const [values, setValues] = useState<FormValues>(initialValues);
+  const [submittedData, setSubmittedData] = useState<FormValues | null>(null);
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  const validateForm = () => {
+    const result = formSchema.safeParse(values);
+    // κάνει το validation και επιστρέφει ένα obj σαν αυτο:
+    //{success: true, data: validatedData}
+    //{success: false, error: errors};
+    console.log(result);
+
+    if (!result.success) {
+      const newErrors: FormErrors = {};
+      result.error.issues.forEach((issue) => {
+        const fieldName = issue.path[0] as keyof FormValues;
+        newErrors[fieldName] = issue.message;
+      }); 
+      setErrors(newErrors);
+      return false;
+    }
+
+    setErrors({});
+    return true;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const isValid = validateForm();
+    if (isValid) {
+      setSubmittedData(values);
+      setValues(initialValues);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const {name, value} = e.target;
+    setValues (prev => ({
+        ...prev,
+        [name]: value,
+      }));
+    setErrors(
+      prev => ({
+        ...prev,
+        [name]: undefined,
+      }));
+    };
+
+  const handleClear = () => {
+    setValues(initialValues);
+    setErrors({});
+    setSubmittedData(null);
+  };
+
+  return(
+    <>
+      <div className=" max-w-sm mx-auto mt-8">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <input
+              type="text"
+              name="name"
+              value={values.name}
+              placeholder="Name"
+              onChange={handleChange}
+              className="w-full px-4 py-2 rounded border"
+              autoComplete="off"
+            />
+            {errors?.name && (
+              <p className="text-cf-dark-red">{errors.name}</p>
+            )}
+          </div>
+          <div>
+            <input
+              type="text"
+              name="email"
+              value={values.email}
+              placeholder="Email"
+              onChange={handleChange}
+              className="w-full px-4 py-2 rounded border"
+              autoComplete="off"
+            />
+            {errors?.email && (
+              <p className="text-cf-dark-red">{errors.email}</p>
+            )}
+          </div>
+          <div>
+            <textarea
+              name="message"
+              value={values.message}
+              placeholder="Type your message"
+              onChange={handleChange}
+              className="w-full px-4 py-2 rounded border"
+            ></textarea>
+            {errors?.message && (
+              <p className="text-cf-dark-red">{errors.message}</p>
+            )}
+          </div>
+          <div className="flex gap-4">
+            <button
+              type="submit"
+              className="bg-cf-dark-red text-white px-4 py-2 rounded"
+            >
+              Submit
+            </button>
+            <button
+              type="button"
+              onClick={handleClear}
+              className="bg-gray-200 text-cf-gray-700 px-4 py-2 rounded">
+              Clear
+            </button>
+          </div>
+        </form>
+          { submittedData && (
+            <div className="mt-6 border-t pt-4 space-y-2">
+              <h2 className="font-semibold">Submitted Data</h2>
+              <p><strong>Name:</strong> {submittedData.name}</p>
+              <p><strong>Email:</strong> {submittedData.email}</p>
+              <p><strong>Message:</strong> {submittedData.message}</p>
+            </div>
+          )}
+      </div>
+    </>
+  )
+};
+
+export default MultiFieldFormWithZodValidation;
+```
+
+## react hook form
+`npm install react-hook-form`  
+`npm install @hookform/resolvers`
+```jsx
+import {useForm} from "react-hook-form";
+
+  const {  } = useForm();
+```
+
+#### cf7-react-intro\src\components\MultiFieldFormWithReactHook.tsx
 
 ```jsx
+import {z} from "zod";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
 
+const formSchema = z.object({
+  name: z.string().trim().nonempty("Name is required."),
+  email: z
+    .string()
+    .trim()
+    .nonempty("Email is required.")
+    .email("Email is invalid."),
+  message: z.string()
+    .trim()
+    .nonempty("Message is required.")
+    .min(5, "Message must be at least 5 characters.")
+    .max(8, "Message must be at most 8 characters."),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+const initialValues = {
+  name: "",
+  email: "",
+  message: "",
+};
+
+const MultiFieldFormWithReactHook = () => {
+
+  const {
+    register,
+    handleSubmit,
+    formState: {errors},
+    reset,
+    watch,
+  } = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: initialValues,
+    });
+
+  const onSubmit = (data: FormValues) => {
+    console.log(data);
+    reset();
+  }
+
+  const onClear = () => {
+    reset();
+  }
+
+  const watchedValues = watch();
+
+  return(
+    <>
+      <div className=" max-w-sm mx-auto mt-8">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <input
+              {...register("name")} // name="name"
+              placeholder="Name"
+              className="w-full px-4 py-2 rounded border"
+              autoComplete="off"
+            />
+            {errors.name && (
+              <p className="text-cf-dark-red">{errors.name.message}</p>
+            )}
+          </div>
+          <div>
+            <input
+              {...register("email")}
+              placeholder="Email"
+              className="w-full px-4 py-2 rounded border"
+              autoComplete="off"
+            />
+            {errors.email && (
+              <p className="text-cf-dark-red">{errors.email.message}</p>
+            )}
+          </div>
+          <div>
+            <textarea
+              {...register("message")}
+              placeholder="Type your message"
+              className="w-full px-4 py-2 rounded border"
+            ></textarea>
+            {errors.message && (
+              <p className="text-cf-dark-red">{errors.message.message}</p>
+            )}
+          </div>
+          <div className="flex gap-4">
+            <button
+              type="submit"
+              className="bg-cf-dark-red text-white px-4 py-2 rounded"
+            >
+              Submit
+            </button>
+            <button
+              type="button"
+              onClick={onClear}
+              className="bg-gray-200 text-cf-gray-700 px-4 py-2 rounded">
+              Clear
+            </button>
+          </div>
+        </form>
+            <div className="mt-6 border-t pt-4 space-y-2">
+              <h2 className="font-semibold">Live Data</h2>
+              <p><strong>Name:</strong> {watchedValues.name}</p>
+              <p><strong>Email:</strong> {watchedValues.email}</p>
+              <p><strong>Message:</strong> {watchedValues.message}</p>
+            </div>
+      </div>
+    </>
+  )
+};
+
+export default MultiFieldFormWithReactHook;
 ```
+
+# http client
+```jsx
+// 1ος
+fetch(url, {
+    method: "POST",
+    headers: {'content-type': 'application/json'},
+    body: JSON.stringify(payload)
+  }
+)
+  .then (res => {
+      if(!res.ok) throw new Error(res.statusText)
+      return res.jsox()
+    }
+  )
+  .then (data => {})
+  .catch(err => {})
+
+// 2ος
+async function fetchData(url, method = "GET", payload= null) {
+  try{
+    const options ={
+      method,
+      headers: {'content-type': 'application/json'}
+    }
+    if (payload) options.body = JSON.stringify(payload) //αυτό με if γιατι το get δδεν έχει payload
+    const res = await fetch(yrl, options)
+    if (!res.ok) throw new Error(res.statusText)
+    return await res.json()
+  } catch (e) {
+    console.log(err)
+  }
+}
+```
+δοκιμαστικό backend που μας έδωσε στο μάθημα  
+`api.cf.dammarin.com/docs`    
+
+θα παρουμε γραφιστικά απο το  
+`https://ui.shadcn.com`  
+
+οδηγίες:  
+`https://ui.shadcn.com/docs/installation/vite`  
+
+το εγκαθηστώ  
+#### cf7-react-intro\tsconfig.json
+```
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+```
+#### cf7-react-intro\tsconfig.app.json
+```
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+```
+`npm install -D @types/node`  
+
+#### cf7-react-intro\vite.config.ts
+```
+import path from "path"
+
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+```
+
+`npx shadcn@latest init`  
 
