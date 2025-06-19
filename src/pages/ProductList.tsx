@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import type {Product} from "@/api/products.ts";
+import type {ProductType} from "@/api/products.ts";
 import {getProducts, deleteProduct} from "@/api/products.ts";
 import {Button} from "@/components/ui/button.tsx";
 import {useNavigate} from "react-router";
@@ -16,7 +16,7 @@ import {Pencil, Trash} from "lucide-react";
 import {toast} from "sonner";
 
 const ProductList = () => {
-  const [products, setProducts] = useState<Product[]>([])
+  const [products, setProducts] = useState<ProductType[]>([])
   const [loading, setloading] = useState<boolean>(true);
   const [deleting, setDeleting] = useState<number | null>(null);
 
