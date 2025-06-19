@@ -3566,7 +3566,8 @@ export async function deleteProduct(id: number): Promise<void> {
   if (!res.ok) throw new Error("Failed to delete product.");
 }
 ```
-`npx shadcn@latest add table`  
+`npx shadcn@latest add table`
+`npm install sonner`  
 
 φτιαχνω οθόνη να τα δω  
 #### cf7-react-intro\src\pages\ProductList.tsx
@@ -3663,4 +3664,67 @@ const ProductList = () => {
   )
 }
 export default ProductList
+```
+
+#### cf7-react-intro\src\components\RouterLayout.tsx
+```jsx
+import {Outlet} from "react-router";
+import HeaderResponsive from "./HeaderResponsive";
+import Footer from "./Footer";
+import { Toaster } from "sonner";
+
+const RouterLayout = () => {
+  return (
+    <>
+      <HeaderResponsive />
+      <div className="container mx-auto min-h-[95vh] pt-24">
+        <Outlet/>
+      </div>
+      <Footer />
+      <Toaster richColors/>
+    </>
+  )
+}
+export default RouterLayout;
+```
+
+#### cf7-react-intro\src\pages\Product.tsx
+```jsx
+import {useParams} from "react-router";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import { productSchema } from "@/api/products"
+
+
+const Product = () => {
+  const { productId } = useParams();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm({
+      resolver: zodResolver(productSchema),
+      defaultValues: {
+        name: "",
+        slug: "",
+        description: "",
+        image: "",
+        price: 0,
+        sort: 0,
+        is_active: false,
+        is_favorite: false,
+        category_id: 1, //Default to 1
+      }
+  });
+
+  return (
+    <>
+    </>
+  )
+}
+export default Product;
 ```
